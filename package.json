@@ -1,0 +1,38 @@
+{
+  "name": "inventory-audit-platform",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "packageManager": "yarn@1.22.22",
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "description": "Full-stack platform for scheduled inventory counts and discrepancy review",
+  "scripts": {
+    "backend": "yarn --cwd backend start:dev",
+    "backend:build": "yarn --cwd backend build",
+    "backend:test": "yarn --cwd backend test",
+    "backend:test:e2e": "yarn --cwd backend test:e2e",
+    "backend:test:cov": "yarn --cwd backend test:cov",
+    "backend:lint": "yarn --cwd backend lint",
+    "db:generate": "yarn --cwd backend db:generate",
+    "db:migrate": "yarn --cwd backend db:migrate",
+    "db:seed": "yarn --cwd backend db:seed",
+    "db:reset": "yarn db:migrate && yarn db:seed",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down",
+    "docker:reset": "docker compose down -v && docker compose up -d",
+    "setup": "yarn install:all && yarn docker:up && node -e \"setTimeout(()=>{},3000)\" && yarn db:reset",
+    "frontend": "yarn --cwd frontend dev",
+    "frontend:build": "yarn --cwd frontend build",
+    "frontend:lint": "yarn --cwd frontend lint",
+    "frontend:test": "yarn --cwd frontend test",
+    "install:all": "yarn --cwd backend install && yarn --cwd frontend install",
+    "lint": "yarn backend:lint && yarn frontend:lint",
+    "dev": "concurrently -n back,front -c blue,green \"yarn backend\" \"yarn frontend\"",
+    "test": "yarn backend:test && yarn frontend:test"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

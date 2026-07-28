@@ -1,0 +1,82 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CI: "true"
+
+jobs:
+  backend:
+    name: Backend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        working-directory: backend
+        run: corepack yarn install --frozen-lockfile
+
+      - name: Lint
+        working-directory: backend
+        run: corepack yarn lint
+
+      - name: Run unit tests
+        working-directory: backend
+        run: corepack yarn test --runInBand
+
+      - name: Run HTTP smoke test
+        working-directory: backend
+        env:
+          DATABASE_URL: postgresql://inventory:inventory_local@127.0.0.1:5432/inventory_audit
+          DATABASE_SSL: "false"
+          JWT_SECRET: ci-only-secret
+        run: corepack yarn test:e2e --runInBand
+
+      - name: Build
+        working-directory: backend
+        run: corepack yarn build
+
+  frontend:
+    name: Frontend
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        working-directory: frontend
+        run: corepack yarn install --frozen-lockfile
+
+      - name: Lint
+        working-directory: frontend
+        run: corepack yarn lint
+
+      - name: Run unit tests
+        working-directory: frontend
+        run: corepack yarn test --runInBand
+
+      - name: Build
+        working-directory: frontend
+        run: corepack yarn build
