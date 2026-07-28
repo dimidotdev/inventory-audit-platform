@@ -33,6 +33,6 @@
     "test": "yarn backend:test && yarn frontend:test"
   },
   "devDependencies": {
-    "concurrently": "^9.1.2"
+    "concurrently": "^9.2.4"
   }
 }

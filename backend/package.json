@@ -73,10 +73,11 @@
     "typescript-eslint": "^8.20.0"
   },
   "resolutions": {
+    "**/@esbuild-kit/core-utils/esbuild": "0.25.0",
     "@nestjs/swagger/js-yaml": "5.2.2",
     "body-parser": "2.3.0",
     "path-to-regexp": "8.4.2",
-    "qs": "6.15.2"
+    "qs": "6.15.3"
   },
   "jest": {
     "moduleFileExtensions": [
